@@ -43,7 +43,7 @@ Project: ItemCatalog - [Mohamed Ismail]
 
 # Miscellaneous
 
- - you can edit lotsofmenus.py to create your own initial data.
+ - you can edit the file(lotsofmenus.py) to create your own initial data.
  
  - you can use another OAuth2.0 providers as LinkedIn,...
  
