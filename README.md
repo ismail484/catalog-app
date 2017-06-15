@@ -1,4 +1,4 @@
-Project: ItemCatalog - [Mohamed Ismail]
+# Project: ItemCatalog - [Mohamed Ismail]
 
 # Description
 
