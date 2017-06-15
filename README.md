@@ -10,15 +10,16 @@ Description
 
 Required Libraries and Dependencies
 
-it just needs ,Postgres SQL DB and pyton 2.7v or higher to run the application
+-it just needs ,Postgres SQL DB and pyton 2.7v or higher to run the application
+
 How to Run Project
 
-Download the project files:
+- Download the project files:
 
-newsdata.sql.tar.gz
-views.sql
-analysis.py
-Unzip newsdata.sql.tar.gz by typing: tar xf newsdata.sql.tar -C /destination
+. newsdata.sql.tar.gz
+. views.sql
+. analysis.py
+. Unzip newsdata.sql.tar.gz by typing: tar xf newsdata.sql.tar -C /destination
 
 Check if I have already imported my newsdata.sql by typing (psql=> /list), if exists then escape step4 .
 
