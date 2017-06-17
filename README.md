@@ -3,12 +3,18 @@
 # Description
  
  - '''provides a list of items within a variety of categories '''
- - '''as well as provide a user registration and authentication system. Registered users 
+ 
+ - '''as well as provide a user registration and authentication system. Registered users'''
+ 
  - '''will have the ability to post, edit and delete their own items.'''
+ 
  
  # Required Libraries and Dependencies
  
-   - it just needs ,Postgres SQL DB and pyton 2.7v or higher to run the application
+   - install SQL DB and pyton 2.7v or higher to run the application .
+   
+   - install Sublime or Visual Studio or any IDE just to develop your code (python , html, css,javascript).
+   
  
  # How to Run Project
  
@@ -22,7 +28,8 @@
     
     5. run project.py to run the project.
     
-    6. open your browser on http://localhost:5000/ to start the project
+    6. open your browser on http://localhost:5000/ to start the project .
+    
    
  # Extra Credit Description
    
@@ -35,10 +42,6 @@
     4.  Apply OAuth2.0 providers (Facebook&Google +) .
     
     5.  Apply Authorization to create own user's data .
- 
- 
- 
- 
  
  
  # Miscellaneous
