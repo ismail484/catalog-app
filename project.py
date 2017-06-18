@@ -311,57 +311,66 @@ def categoriesJSON():
 @app.route('/')
 @app.route('/category/')
 def showCategories():
-    categories = session.query(Category).order_by(asc(Category.name))
-    items = session.query(MenuItem).order_by(MenuItem.id.desc()).limit(10)
-    if 'username' not in login_session:
-        return render_template('publicCategories.html',
-                               categories=categories,
-                               items=items)
-    else:
-        return render_template('categories.html',
-                               categories=categories,
-                               items=items)
+    try:
+        categories = session.query(Category).order_by(asc(Category.name))
+        items = session.query(MenuItem).order_by(MenuItem.id.desc()).limit(10)
+        if 'username' not in login_session:
+            return render_template('publicCategories.html',
+                                   categories=categories,
+                                   items=items)
+        else:
+            return render_template('categories.html',
+                                   categories=categories,
+                                   items=items)
+    except:
+        return redirect(url_for('showCategories'))
 
 
 # Show a category items
 @app.route('/category/<string:category_name>/')
 @app.route('/category/<string:category_name>/items/')
 def showList(category_name):
-    categories = session.query(Category).order_by(asc(Category.name))
-    category = session.query(Category).filter_by(name=category_name).one()
-    creator = getUserInfo(category.user_id)
-    items = session.query(MenuItem).filter_by(
-        category_name=category_name).all()
-    # total_items= items.count()
-    if 'username' not in login_session:
-        return render_template('publicItems.html',
-                               items=items, category=category,
-                               categories=categories,
-                               creator=creator)
-    else:
-        return render_template('items.html',
-                               items=items,
-                               category=category,
-                               categories=categories,
-                               creator=creator)
+    try:
+        categories = session.query(Category).order_by(asc(Category.name))
+        category = session.query(Category).filter_by(name=category_name).one()
+        creator = getUserInfo(category.user_id)
+        items = session.query(MenuItem).filter_by(
+            category_name=category_name).all()
+        # total_items= items.count()
+        if 'username' not in login_session:
+            return render_template('publicItems.html',
+                                   items=items, category=category,
+                                   categories=categories,
+                                   creator=creator)
+        else:
+            return render_template('items.html',
+                                   items=items,
+                                   category=category,
+                                   categories=categories,
+                                   creator=creator)
+    except:
+        return redirect(url_for('showCategories'))
 
 
 # show a specific item
 @app.route('/category/<string:category_name>/<string:item_title>')
 def showItem(category_name, item_title):
-    category = session.query(Category).filter_by(name=category_name).one()
-    creator = getUserInfo(category.user_id)
-    item = session.query(MenuItem).filter_by(title=item_title).one()
-    if 'username' not in login_session:
-        return render_template('publicItem.html',
-                               item=item,
-                               category=category,
-                               creator=creator)
-    else:
-        return render_template('item.html',
-                               item=item,
-                               category=category,
-                               creator=creator)
+    try:
+        category = session.query(Category).filter_by(name=category_name).one()
+        creator = getUserInfo(category.user_id)
+        item = session.query(MenuItem).filter_by(title=item_title).one()
+        if 'username' not in login_session:
+            return render_template('publicItem.html',
+                                   item=item,
+                                   category=category,
+                                   creator=creator)
+        else:
+            return render_template('item.html',
+                                   item=item,
+                                   category=category,
+                                   creator=creator)
+    except:
+        return redirect(url_for('showCategories'))
 
 
 # Delete a specific item
@@ -369,19 +378,23 @@ def showItem(category_name, item_title):
            '<string:item_title>/delete', methods=['GET', 'POST'])
 @login_required
 def deleteItem(category_name, item_title):
-    category = session.query(Category).filter_by(name=category_name).one()
-    itemToDelete = session.query(MenuItem).filter_by(title=item_title).one()
-    if login_session['user_id'] != itemToDelete.user_id:
-        return ("<script>function myFunction() {alert('You are not authorized"
-                "to delete this item . Please create your own items in order"
-                "to delete items.');}</script><body onload='myFunction()''>")
-    if request.method == 'POST':
-        session.delete(itemToDelete)
-        session.commit()
-        flash('Menu Item Successfully Deleted')
+    try:
+        category = session.query(Category).filter_by(name=category_name).one()
+        itemToDelete = (session.query(MenuItem).filter_by(title=item_title)
+                        .one())
+        if login_session['user_id'] != itemToDelete.user_id:
+            return ("<script>function myFunction() {alert('You are not"
+                    "authorized to delete this item . Please create your own"
+                    "items.');}</script><body onload='myFunction()''>")
+        if request.method == 'POST':
+            session.delete(itemToDelete)
+            session.commit()
+            flash('Menu Item Successfully Deleted')
+            return redirect(url_for('showCategories'))
+        else:
+            return render_template('deleteItem.html', item=itemToDelete)
+    except:
         return redirect(url_for('showCategories'))
-    else:
-        return render_template('deleteItem.html', item=itemToDelete)
 
 
 # edit a specific item
@@ -389,48 +402,55 @@ def deleteItem(category_name, item_title):
            methods=['GET', 'POST'])
 @login_required
 def editItem(category_name, item_title):
-    category = session.query(Category).filter_by(name=category_name).one()
-    editedItem = session.query(MenuItem).filter_by(title=item_title).one()
-    categories = session.query(Category).order_by(asc(Category.name))
-    if login_session['user_id'] != editedItem.user_id:
-        return ("<script>function myFunction() {alert('You are not authorized"
-                "to edit this Category Item . Please create"
-                "your own Items in order to edit"
-                "items.');}</script><body onload='myFunction()''>")
-    if request.method == 'POST':
-        if request.form['title']:
-            editedItem.title = request.form['title']
-        if request.form['description']:
-            editedItem.description = request.form['description']
-        if request.form['category_name']:
-            editedItem.category_name = request.form['category_name']
-        session.add(editedItem)
-        session.commit()
-        flash('Menu Item Successfully Edited')
+    try:
+        category = session.query(Category).filter_by(name=category_name).one()
+        editedItem = session.query(MenuItem).filter_by(title=item_title).one()
+        categories = session.query(Category).order_by(asc(Category.name))
+        if login_session['user_id'] != editedItem.user_id:
+            return ("<script>function myFunction() {alert('You are not"
+                    "authorized to edit this Category Item . Please create"
+                    "your own Items in order to edit"
+                    "items.');}</script><body onload='myFunction()''>")
+        if request.method == 'POST':
+            if request.form['title']:
+                editedItem.title = request.form['title']
+            if request.form['description']:
+                editedItem.description = request.form['description']
+            if request.form['category_name']:
+                editedItem.category_name = request.form['category_name']
+            session.add(editedItem)
+            session.commit()
+            flash('Menu Item Successfully Edited')
+            return redirect(url_for('showCategories'))
+        else:
+            return render_template('editItem.html',
+                                   category_name=category_name,
+                                   item=editedItem, categories=categories)
+    except:
         return redirect(url_for('showCategories'))
-    else:
-        return render_template('editItem.html', category_name=category_name,
-                               item=editedItem, categories=categories)
 
 
 # Create a new item
 @app.route('/category/items/new/', methods=['GET', 'POST'])
 def newItem():
-    if 'username' not in login_session:
-        return redirect('/login')
-    categories = session.query(Category).order_by(asc(Category.name))
-    if request.method == 'POST':
-        newItem = MenuItem(
-            title=request.form[
-                'title'], description=request.form['description'],
-            category_name=request.form['category_name'],
-            user_id=login_session['user_id'])
-        session.add(newItem)
-        session.commit()
-        flash('New Menu %s Item Successfully Created' % (newItem.title))
+    try:
+        if 'username' not in login_session:
+            return redirect('/login')
+        categories = session.query(Category).order_by(asc(Category.name))
+        if request.method == 'POST':
+            newItem = MenuItem(
+                title=request.form[
+                    'title'], description=request.form['description'],
+                category_name=request.form['category_name'],
+                user_id=login_session['user_id'])
+            session.add(newItem)
+            session.commit()
+            flash('New Menu %s Item Successfully Created' % (newItem.title))
+            return redirect(url_for('showCategories'))
+        else:
+            return render_template('newItem.html', categories=categories)
+    except:
         return redirect(url_for('showCategories'))
-    else:
-        return render_template('newItem.html', categories=categories)
 
 
 # Disconnect based on provider
