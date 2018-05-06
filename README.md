@@ -1,4 +1,6 @@
 # Project: ItemCatalog - [Mohamed Ismail]
+ - Simply open [CatalogApp](http://52.28.98.229/), and login using your Facebook or Google+ account , and create your favourite Sports Catalog .
+
  
 # Description
  
